@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DigiJewels — Where Jewellery Meets Technology</title>
+  <meta name="description" content="DigiJewels: Digital partner for modern jewellers. Create gold & silver schemes, manage customers, redemption at store." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --navy:#0A1B2E;
+      --navy-80:#0a1b2ee6; /* 90% */
+      --gold1:#C9A646;
+      --gold2:#F3D58A;
+      --gold3:#9C7E2A;
+      --emerald:#1FA77E;
+      --soft-orange:#FF8C3A;
+      --text:#EAF0FF;
+      --muted:#9BB1D0;
+      --glass: rgba(255,255,255,0.06);
+    }
+    html,body{background: radial-gradient(1200px 800px at 80% -10%, #0f2a4f 0%, var(--navy) 60%); color: var(--text); font-family: 'Outfit', system-ui, -apple-system, Segoe UI, Roboto, 'Poppins', sans-serif;}
+
+    /* Gold gradient */
+    .gold{background: linear-gradient(135deg,var(--gold1), var(--gold2) 45%, var(--gold1) 60%, var(--gold3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+    .gold-bg{background: linear-gradient(135deg,var(--gold3), var(--gold2));}
+
+    /* Navbar */
+    .navbar{transition: background-color .4s ease, box-shadow .4s ease;}
+    .navbar.glassy{background: rgba(10,27,46,.35); backdrop-filter: blur(8px);}
+    .navbar.solid{background: var(--navy-80); box-shadow: 0 8px 24px rgba(0,0,0,.28)}
+
+    /* Navbar gem glow */
+    .logo-gem{filter: drop-shadow(0 0 0px rgba(201,166,70,0)); transition: filter .4s ease}
+    .navbar:hover .logo-gem{filter: drop-shadow(0 0 10px rgba(201,166,70,.4))}
+
+    /* Hero */
+    .hero{position: relative; padding-top: 7.5rem; padding-bottom: 6rem; overflow: clip;}
+    .hero h1{font-weight:800; letter-spacing:-.02em;}
+    .hero .lead{color: var(--muted)}
+
+    /* Parallax layers */
+    .parallax{position:absolute; inset:0; pointer-events:none}
+    .layer{position:absolute; width:60vmax; height:60vmax; border-radius:50%; filter: blur(50px); opacity:.25}
+    .layer.l1{background: radial-gradient(closest-side,#ffd66b,#c79b2b55,transparent 70%); left:-20vmax; top:-10vmax}
+    .layer.l2{background: radial-gradient(closest-side,#34e0b1,#1fa77e55,transparent 70%); right:-25vmax; top:-5vmax}
+
+    /* Sparkles field */
+    .sparkle-field{position:absolute; inset:0; pointer-events:none}
+    .twinkle{position:absolute; width:6px; height:6px; border-radius:50%; background: radial-gradient(circle, #fff 0%, #ffe9a9 40%, rgba(255,255,255,0) 70%); opacity:0; box-shadow:0 0 12px rgba(243,213,138,.7)}
+
+    .card.glass{background: var(--glass); border: 1px solid rgba(255,255,255,.08); box-shadow: 0 10px 30px rgba(0,0,0,.14);}
+    .pill{display:inline-flex; align-items:center; gap:.5rem; border:1px solid rgba(255,255,255,.1); border-radius:999px; padding:.35rem .7rem; background:rgba(255,255,255,.05)}
+
+    /* Button sweep */
+    .btn-sweep{position:relative; overflow:hidden}
+    .btn-sweep:before{content:""; position:absolute; top:-120%; left:-20%; width:40%; height:300%; transform: rotate(20deg); background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.7) 50%, rgba(255,255,255,0) 100%); opacity:.0}
+    .btn-sweep:hover:before{animation: sweep 1s ease}
+    @keyframes sweep{from{left:-40%; opacity:0} 20%{opacity:.5} to{left:120%; opacity:0}}
+
+    /* Marquee */
+    .marquee{position:relative; overflow:hidden; border-top:1px solid rgba(255,255,255,.08); border-bottom:1px solid rgba(255,255,255,.08);}
+    .marquee-track{display:flex; gap:4rem; white-space:nowrap; animation:scroll 28s linear infinite}
+    @keyframes scroll { from{transform: translateX(0)} to{transform: translateX(-50%)} }
+
+    /* Section spacing */
+    section{padding: 5.5rem 0}
+
+    /* Shimmer headers */
+    .shimmer{background: linear-gradient(120deg, #d7e2ff33 0%, #ffffffcc 20%, #d7e2ff33 40%); background-size: 200% 100%; -webkit-background-clip: text; color: transparent; animation: shimmer 3.5s ease-in-out infinite}
+    @keyframes shimmer{0%{background-position: 200% 0} 100%{background-position: -200% 0}}
+
+    /* Brand tiles */
+    .brand-tile{position:relative; border:1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); border-radius:1.25rem; padding:1.25rem; height:100%; overflow:hidden; transform-style: preserve-3d; will-change: transform}
+    .brand-tile:hover{transform: translateY(-4px) rotateX(2deg) rotateY(-2deg); transition: transform .35s ease}
+    .brand-tile:after{content:""; position:absolute; inset:auto -20% -40% auto; width:60%; height:60%; background: radial-gradient(closest-side,#ffe9a9,#c9a64633,transparent 70%); filter: blur(10px)}
+
+    /* Step line */
+    .step{position: relative; padding: 1.25rem; border-left: 2px dashed rgba(255,255,255,.18)}
+    .step::before{content: attr(data-step); position:absolute; left:-.9rem; top:.6rem; width:1.35rem; height:1.35rem; border-radius:999px; background: linear-gradient(135deg,var(--gold2),var(--gold1)); color:#1a1400; font-weight:700; font-size:.85rem; display:grid; place-items:center; box-shadow: 0 5px 14px rgba(201,166,70,.35)}
+
+    .stat{font-weight:800; font-size: clamp(1.75rem, 1.3rem + 1.5vw, 3rem)}
+
+    .cta-gradient{background: linear-gradient(135deg, #12345b, #0a1b2e 40%, #113b6c); border:1px solid rgba(255,255,255,.06)}
+
+    .footer{border-top:1px solid rgba(255,255,255,.08); padding:2.25rem 0; color: var(--muted)}
+
+    /* Preloader */
+    .preloader{position:fixed; inset:0; background: radial-gradient(800px 400px at 60% -10%, #133a6b 0%, #081526 50%); display:grid; place-items:center; z-index:9999}
+    .gem{width:84px; height:84px; position:relative}
+    .gem:before, .gem:after{content:""; position:absolute; inset:0; border-radius:14px; transform: rotate(45deg); background: linear-gradient(135deg,var(--gold2),var(--gold1) 60%, var(--gold3)); box-shadow: 0 20px 60px rgba(201,166,70,.35)}
+    .gem:after{filter: blur(12px); opacity:.4}
+
+    a{color:inherit}
+    a:hover{color:inherit}
+
+    /* Floating jewelry icons */
+    .float-icons{position:absolute; inset:0; pointer-events:none}
+    .icon{position:absolute; width:26px; height:26px; opacity:.0}
+    .icon svg{width:100%; height:100%}
+  </style>
+</head>
+<body>
+  <!-- Preloader -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="text-center">
+      <div class="gem mx-auto mb-3"></div>
+      <div class="fw-semibold" style="letter-spacing:.12em; color:#d7e2ff99">DIGI<span class="gold">JEWELS</span></div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top glassy">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <div class="logo-gem">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" id="logoGem">
+            <path d="M12 2l4.5 4.5L12 22 7.5 6.5 12 2z" fill="url(#g)"/>
+            <defs>
+              <linearGradient id="g" x1="0" x2="24" y1="0" y2="24" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#F3D58A"/>
+                <stop offset="0.5" stop-color="#C9A646"/>
+                <stop offset="1" stop-color="#9C7E2A"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <strong>Digi<span class="gold">Jewels</span></strong>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="#why">Why</a></li>
+          <li class="nav-item"><a class="nav-link" href="#apps">Apps</a></li>
+          <li class="nav-item"><a class="nav-link" href="#how">How it works</a></li>
+          <li class="nav-item"><a class="nav-link" href="#brand">Positioning</a></li>
+          <li class="nav-item"><a class="btn btn-sm btn-light ms-lg-3 btn-sweep" href="#cta">Join Waitlist</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero position-relative">
+    <!-- Parallax gradient blobs -->
+    <div class="parallax" id="parallax">
+      <div class="layer l1" data-depth="0.06"></div>
+      <div class="layer l2" data-depth="0.12"></div>
+    </div>
+
+    <!-- Sparkles -->
+    <div class="sparkle-field" id="heroSparkles"></div>
+
+    <!-- Floating icons -->
+    <div class="float-icons" id="floatIcons"></div>
+
+    <div class="container position-relative">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <div class="pill mb-3"><span class="badge gold-bg text-dark fw-bold">New</span> Powered by DigiJewels</div>
+          <h1 class="display-4 lh-1 mb-3">
+            <span class="gold">Where Jewellery</span><br/>
+            Meets Technology
+          </h1>
+          <p class="lead mb-4">Digital partner for modern jewellers — build schemes, manage customers, enable buy–sell–redeem, all under one brandable platform.</p>
+          <div class="d-flex gap-3">
+            <a href="#cta" class="btn btn-warning text-dark fw-semibold px-4 py-2 rounded-pill btn-sweep">Request Demo</a>
+            <a href="#apps" class="btn btn-outline-light fw-semibold px-4 py-2 rounded-pill">Explore Apps</a>
+          </div>
+          <div class="d-flex align-items-center gap-4 mt-4" id="stats">
+            <div><div class="stat" data-count="500">0</div><small class="text-secondary">Stores onboard target</small></div>
+            <div><div class="stat" data-count="99.9">0</div><small class="text-secondary">Uptime architecture</small></div>
+            <div><div class="stat" data-count="3">0</div><small class="text-secondary">Week go‑live</small></div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="card glass p-3 p-md-4" id="heroCard">
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <div class="small text-uppercase text-secondary">Vault Balance</div>
+                <div class="h3 mb-0 gold">₹ 12,50,000</div>
+              </div>
+              <div class="rounded-circle" style="width:44px;height:44px;background:radial-gradient(circle at 30% 30%,#fff8d1,#caa746); box-shadow:0 8px 24px rgba(201,166,70,.35)"></div>
+            </div>
+            <hr class="border-secondary border-opacity-25">
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="small text-secondary">Gold Price</div>
+                <div class="fw-bold">₹ 6,350/gm</div>
+              </div>
+              <div class="col-6">
+                <div class="small text-secondary">Silver Price</div>
+                <div class="fw-bold">₹ 78.5/gm</div>
+              </div>
+              <div class="col-12">
+                <div class="progress" role="progressbar" aria-label="Adoption" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" style="height:10px">
+                  <div class="progress-bar bg-warning" style="width: 62%"></div>
+                </div>
+                <small class="text-secondary">Adoption: 62% this quarter</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- marquee -->
+  <div class="marquee py-3">
+    <div class="container">
+      <div class="marquee-track" aria-hidden="true">
+        <span class="text-secondary">Trusted by modern jewellers</span>
+        <span class="text-secondary">•</span>
+        <span class="text-secondary">Digital schemes • Buy • Sell • Redeem</span>
+        <span class="text-secondary">•</span>
+        <span class="text-secondary">DigiJewels Partner App</span>
+        <span class="text-secondary">•</span>
+        <span class="text-secondary">DigiJewels Customer App</span>
+        <span class="text-secondary">•</span>
+        <span class="text-secondary">DigiJewels Vault • Pay</span>
+        <span class="text-secondary">•</span>
+        <!-- duplicate for seamless loop -->
+        <span class="text-secondary">Trusted by modern jewellers</span>
+        <span class="text-secondary">•</span>
+        <span class="text-secondary">Digital schemes • Buy • Sell • Redeem</span>
+        <span class="text-secondary">•</span>
+        <span class="text-secondary">DigiJewels Partner App</span>
+        <span class="text-secondary">•</span>
+        <span class="text-secondary">DigiJewels Customer App</span>
+        <span class="text-secondary">•</span>
+        <span class="text-secondary">DigiJewels Vault • Pay</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why -->
+  <section id="why">
+    <div class="container">
+      <div class="row align-items-end mb-4">
+        <div class="col-md-8">
+          <h2 class="fw-bold shimmer">Why <span class="gold">DigiJewels</span> Works Perfectly</h2>
+          <p class="text-secondary mb-0">Instant clarity, balanced tone, and a scalable brand foundation that grows with your business.</p>
+        </div>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="brand-tile h-100">
+            <h5 class="mb-2">1. Instant Clarity</h5>
+            <p class="text-secondary">“Digi” = digital, “Jewels” = your world. No explanation needed — it clicks in every market across India.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="brand-tile h-100">
+            <h5 class="mb-2">2. Balanced Tone</h5>
+            <p class="text-secondary">Modern enough for SaaS, friendly in pronunciation, and emotionally connected to jewellery — brandable without being abstract.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="brand-tile h-100">
+            <h5 class="mb-2">3. Scalable Foundation</h5>
+            <p class="text-secondary">Under one umbrella: Partner & Customer Apps, Vault, Pay, Gold — built to expand features without changing identity.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Apps / Brand Extensions -->
+  <section id="apps">
+    <div class="container">
+      <div class="row align-items-end mb-4">
+        <div class="col-md-8">
+          <h2 class="fw-bold shimmer">The <span class="gold">DigiJewels</span> Suite</h2>
+          <p class="text-secondary mb-0">A connected ecosystem for jewellers and their customers.</p>
+        </div>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="brand-tile">
+            <h6 class="text-secondary">Partner</h6>
+            <h4>DigiJewels Partner App</h4>
+            <p class="text-secondary">Create schemes, verify KYC, manage vaults.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="brand-tile">
+            <h6 class="text-secondary">Customer</h6>
+            <h4>DigiJewels Customer App</h4>
+            <p class="text-secondary">Buy–sell in grams, track savings, redeem in‑store.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="brand-tile">
+            <h6 class="text-secondary">Payments</h6>
+            <h4>DigiJewels Pay</h4>
+            <p class="text-secondary">Instant, compliant payments with ledger sync.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="brand-tile">
+            <h6 class="text-secondary">Security</h6>
+            <h4>DigiJewels Vault</h4>
+            <p class="text-secondary">Secure vaulting with audit trails and insurance.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how">
+    <div class="container position-relative">
+      <div class="sparkle-field" id="howSparkles"></div>
+      <div class="row align-items-end mb-4">
+        <div class="col-md-8">
+          <h2 class="fw-bold shimmer">Simple for Stores. Powerful under the hood.</h2>
+          <p class="text-secondary mb-0">From onboarding to redemption — designed for real‑world jewellery operations.</p>
+        </div>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="step brand-tile" data-step="1">
+            <h5>Onboard & Configure</h5>
+            <p class="text-secondary">Add store, set gold/silver schemes, margins, and policies. White‑label with your brand.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="step brand-tile" data-step="2">
+            <h5>Customers Buy & Save</h5>
+            <p class="text-secondary">Customers purchase grams, SIP or one‑time. Live pricing, GST‑ready invoices, secure vaulting.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="step brand-tile" data-step="3">
+            <h5>Redeem In‑Store</h5>
+            <p class="text-secondary">Seamless redemption at your counter. Transparent charges, instant updates, happy customers.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4 mt-1">
+        <div class="col-12 col-lg-10">
+          <div class="card glass p-4 p-md-5 cta-gradient">
+            <div class="row align-items-center g-4">
+              <div class="col-md-8">
+                <div class="pill mb-2"><span class="gold">Performance</span> • Built for scale</div>
+                <h3 class="mb-2">99.9% uptime • PCI‑friendly flows • GST ready</h3>
+                <p class="text-secondary mb-0">Built like a fintech, loved like a jewellery brand.</p>
+              </div>
+              <div class="col-md-4 text-md-end">
+                <a href="#cta" class="btn btn-warning text-dark fw-semibold px-4 py-2 rounded-pill btn-sweep">Get Early Access</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Brand positioning lines -->
+  <section id="brand">
+    <div class="container">
+      <div class="row align-items-end mb-4">
+        <div class="col-md-8">
+          <h2 class="fw-bold shimmer">Brand Positioning</h2>
+          <p class="text-secondary mb-0">Pick the tone that fits your market. Swap lines in seconds.</p>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+          <div class="brand-tile h-100 d-flex flex-column">
+            <h5 class="mb-2">Empowering Every Jeweller Digitally.</h5>
+            <p class="text-secondary mb-0">Speaks to your mission. Clear, inclusive, and growth‑oriented.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="brand-tile h-100">
+            <h5 class="mb-2">Your Jewellery Business, Simplified Digitally.</h5>
+            <p class="text-secondary mb-0">Trust + simplicity. Ideal for B2B onboarding decks.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="brand-tile h-100">
+            <h5 class="mb-2">Where Jewellery Meets Technology.</h5>
+            <p class="text-secondary mb-0">Balanced and sleek. Works great on the website hero.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="brand-tile h-100">
+            <h5 class="mb-2">Digital Partner for Modern Jewellers.</h5>
+            <p class="text-secondary mb-0">Professional B2B tone for enterprise conversations.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="brand-tile h-100">
+            <h5 class="mb-2">Tradition, Now Digital.</h5>
+            <p class="text-secondary mb-0">Emotional connect for regional markets and ATL.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta">
+    <div class="container position-relative">
+      <div class="sparkle-field" id="ctaSparkles"></div>
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="card glass p-4 p-md-5 text-center">
+            <div class="pill mx-auto mb-2"><span class="gold">Early Access</span> • Limited Slots</div>
+            <h3 class="mb-3 shimmer">Bring your jewellery business into the digital era.</h3>
+            <p class="text-secondary">Join the waitlist for beta access to DigiJewels Partner & Customer Apps. We’ll help you launch in weeks, not months.</p>
+            <form class="row g-2 g-md-3 justify-content-center">
+              <div class="col-12 col-md-7">
+                <input required type="email" class="form-control form-control-lg" placeholder="Work email (you@store.com)" />
+              </div>
+              <div class="col-12 col-md-3 d-grid">
+                <button class="btn btn-warning btn-lg text-dark fw-semibold rounded-3 btn-sweep" type="submit">Join Waitlist</button>
+              </div>
+              <div class="col-12"><small class="text-secondary">By continuing, you agree to our terms & privacy.</small></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <div>© <span id="year"></span> DigiJewels. All rights reserved.</div>
+      <div class="d-flex gap-3">
+        <a href="#brand" class="text-decoration-none">Positioning</a>
+        <a href="#how" class="text-decoration-none">How it works</a>
+        <a href="#cta" class="text-decoration-none">Request demo</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Navbar style toggle
+    const nav = document.querySelector('.navbar');
+    const setNav = () => {
+      if (window.scrollY > 32) { nav.classList.add('solid'); nav.classList.remove('glassy'); }
+      else { nav.classList.add('glassy'); nav.classList.remove('solid'); }
+    };
+    window.addEventListener('scroll', setNav); setNav();
+
+    // GSAP
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Preloader animation
+    const pre = document.getElementById('preloader');
+    gsap.to('.gem', { rotate: 360, duration: 1.2, repeat: -1, ease: 'none' });
+    window.addEventListener('load', () => {
+      gsap.to(pre, { autoAlpha: 0, duration: .6, delay: .4, onComplete: () => pre.style.display = 'none' });
+    });
+
+    // Logo entrance pulse
+    gsap.from('#logoGem', {rotateY: 45, scale: .8, transformOrigin: '50% 50%', duration: .9, ease: 'power3.out', delay: .2});
+    gsap.to('.logo-gem', {filter: 'drop-shadow(0 0 14px rgba(201,166,70,.5))', duration: 1.4, yoyo: true, repeat: 1, ease: 'sine.inOut', delay: .6});
+
+    // Hero reveal
+    gsap.from('.hero h1 span, .hero h1 br + *', {opacity:0, y:20, duration:.9, ease:'power3.out', delay:.2});
+    gsap.from('.hero .lead', {opacity:0, y:16, duration:.8, delay:.35, ease:'power3.out'});
+    gsap.from('.hero .btn', {opacity:0, y:14, duration:.8, stagger:.08, delay:.45, ease:'power3.out'});
+    gsap.from('#heroCard', {opacity:0, y:30, duration:.9, delay:.35, ease:'power3.out'});
+
+    // Floating orb gentle drift (replaced by parallax layers + still keep a subtle motion)
+    gsap.to('.layer.l1', { x: 10, y: -8, duration: 5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+    gsap.to('.layer.l2', { x: -8, y: 6, duration: 6, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+
+    // Scroll reveals for tiles and steps
+    gsap.utils.toArray('.brand-tile').forEach((el,i)=>{
+      gsap.from(el, {opacity:0, y:24, duration:.6, delay: i*0.04, ease:'power2.out', scrollTrigger:{trigger: el, start: 'top 88%'} });
+    });
+
+    // Stats counters
+    const counters = document.querySelectorAll('.stat');
+    counters.forEach(el=>{
+      const end = parseFloat(el.getAttribute('data-count'));
+      ScrollTrigger.create({
+        trigger: el, start: 'top 95%', once: true,
+        onEnter: ()=>{
+          gsap.fromTo(el, {innerText:0}, {innerText:end, duration:1.2, ease:'power2.out', snap:{innerText: 0.5}, onUpdate(){
+            if(end % 1 !== 0){ el.innerText = parseFloat(el.innerText).toFixed(1); }
+          }});
+        }
+      });
+    });
+
+    // CTA card subtle pulse
+    gsap.fromTo('.cta-gradient', {scale:.995}, {scale:1, duration:2, yoyo:true, repeat:-1, ease:'sine.inOut'});
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        const id = a.getAttribute('href');
+        if(id.length > 1){
+          e.preventDefault();
+          const y = document.querySelector(id).getBoundingClientRect().top + window.scrollY - 70;
+          gsap.to(window, {scrollTo: y, duration:.7, ease:'power2.out'});
+        }
+      });
+    });
+
+    // Accessibility: reduce motion
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) {
+      gsap.globalTimeline.timeScale(0.75);
+    }
+
+    /* ===== Sparkles engine ===== */
+    function createSparkles(containerId, count = 24){
+      const el = document.getElementById(containerId);
+      for(let i=0;i<count;i++){
+        const s = document.createElement('span');
+        s.className = 'twinkle';
+        s.style.left = Math.random()*100+'%';
+        s.style.top = Math.random()*100+'%';
+        el.appendChild(s);
+        const d = 0.8 + Math.random()*1.8;
+        gsap.to(s, {autoAlpha: 1, scale: gsap.utils.random(0.6,1.2), duration: d, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: Math.random()*2});
+      }
+    }
+    createSparkles('heroSparkles', 28);
+    createSparkles('howSparkles', 18);
+    createSparkles('ctaSparkles', 22);
+
+    /* ===== Floating icons ===== */
+    const icons = [
+      '<svg viewBox="0 0 24 24" fill="none"><path d="M12 2l4 6-4 14-4-14 4-6z" fill="url(#g)"/></svg>', // gem shard
+      '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="6" stroke="#F3D58A" stroke-width="2"/></svg>', // coin
+      '<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="6" width="14" height="12" rx="2" stroke="#F3D58A" stroke-width="2"/></svg>' // vault door
+    ];
+    const floatWrap = document.getElementById('floatIcons');
+    for(let i=0;i<10;i++){
+      const d = document.createElement('div');
+      d.className = 'icon';
+      d.innerHTML = icons[i%icons.length];
+      d.style.left = Math.random()*90 + 5 + '%';
+      d.style.top = Math.random()*70 + 10 + '%';
+      floatWrap.appendChild(d);
+      const drift = 10 + Math.random()*14;
+      gsap.to(d, {autoAlpha: .7, duration: .8, delay: Math.random()*1});
+      gsap.to(d, {y: -drift, x: gsap.utils.random(-6,6), duration: 3+Math.random()*2, yoyo:true, repeat:-1, ease:'sine.inOut'});
+      gsap.to(d, {rotation: gsap.utils.random(-6,6), duration: 4, yoyo:true, repeat:-1, ease:'sine.inOut'});
+    }
+
+    /* ===== Parallax mouse move on hero ===== */
+    const parallax = document.getElementById('parallax');
+    const layers = parallax.querySelectorAll('.layer');
+    function parallaxMove(e){
+      const rect = parallax.getBoundingClientRect();
+      const cx = (e.clientX - rect.left)/rect.width - .5;
+      const cy = (e.clientY - rect.top)/rect.height - .5;
+      layers.forEach(l=>{
+        const depth = parseFloat(l.dataset.depth || '0.05');
+        gsap.to(l, {x: cx * depth * -120, y: cy * depth * -120, duration:.6, ease:'power2.out'});
+      });
+    }
+    parallax.addEventListener('mousemove', parallaxMove);
+
+  </script>
+</body>
+</html>
